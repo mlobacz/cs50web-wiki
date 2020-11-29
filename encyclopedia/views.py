@@ -6,19 +6,9 @@ import markdown2
 
 from . import util
 
-class SearchForm(forms.Form):
-    query = forms.CharField(label="Search Wiki")
 
 def index(request):
-    if request.method == "POST":
-        form = SearchForm(request.POST)
-        if form.is_valid():
-            return redirect("entry", title=form.cleaned_data["query"])
-        else:
-            form = SearchForm()
-    else:
-        form = SearchForm()
-    return render(request, "encyclopedia/index.html", {"entries": util.list_entries(), 'form': form})
+    return render(request, "encyclopedia/index.html", {"entries": util.list_entries()})
 
 
 def entry(request, title):
@@ -33,17 +23,7 @@ def entry(request, title):
     )
 
 def search(request):
-    if request.method == "POST":
-        form = SearchForm(request.POST)
-        if form.is_valid():
-            return HttpResponseRedirect("test passed")
-        else:
-            form = SearchForm()
-    return render(request, "encyclopedia/index.html", {'form': form})
-    # entry = util.get_entry(query)
-    # if entry:
-    #     return render(
-    #         request,
-    #         "encyclopedia/entry.html",
-    #         {"title": query, "entry": markdown2.markdown(entry)},
-    #     )
+    if request.method == "GET":
+        entry = util.get_entry(request.GET["q"])
+        if entry:
+            return redirect('entry', title=entry)
