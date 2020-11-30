@@ -22,8 +22,15 @@ def entry(request, title):
         {"title": title, "entry": markdown2.markdown(entry)},
     )
 
+
 def search(request):
-    if request.method == "GET":
-        entry = util.get_entry(request.GET["q"])
-        if entry:
-            return redirect('entry', title=entry)
+    """Redirects to page matching search query or returns list of entries containing query string."""
+    query = request.GET["q"]
+    if util.get_entry(query):
+        return redirect("encyclopedia:entry", title=query)
+    else:
+        matching_entries = [entry for entry in util.list_entries() if query in entry]
+        return render(request, "encyclopedia/search.html", {"entries": matching_entries})
+
+def new(request):
+    return render(request, "encyclopedia/new.html")
