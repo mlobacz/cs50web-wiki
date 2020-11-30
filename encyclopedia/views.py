@@ -7,6 +7,18 @@ import markdown2
 from . import util
 
 
+class AlreadyExistsError(Exception):
+    """Raised when an entry already exists."""
+
+class NewEntryForm(forms.Form):
+    title = forms.CharField(max_length=20, label="Title")
+    # TODO: format this form somehow
+    content = forms.CharField(
+        widget=forms.Textarea(attrs={"rows": 4, "cols": 10}),
+        label="Page content in Markdown",
+    )
+
+
 def index(request):
     return render(request, "encyclopedia/index.html", {"entries": util.list_entries()})
 
@@ -30,7 +42,21 @@ def search(request):
         return redirect("encyclopedia:entry", title=query)
     else:
         matching_entries = [entry for entry in util.list_entries() if query in entry]
-        return render(request, "encyclopedia/search.html", {"entries": matching_entries})
+        return render(
+            request, "encyclopedia/search.html", {"entries": matching_entries}
+        )
+
 
 def new(request):
-    return render(request, "encyclopedia/new.html")
+    """Allows user to add new entry to the wiki."""
+    if request.method == "POST":
+        form = NewEntryForm(request.POST)
+        if form.is_valid():
+            title = form.cleaned_data["title"]
+            if title in util.list_entries():
+                raise AlreadyExistsError(f"{title} entry already exists!")
+            else:
+                content = form.cleaned_data["content"]
+                util.save_entry(title=title, content=content)
+                return redirect("encyclopedia:entry", title=title)
+    return render(request, "encyclopedia/new.html", {"form": NewEntryForm()})
