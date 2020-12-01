@@ -10,13 +10,17 @@ from . import util
 class AlreadyExistsError(Exception):
     """Raised when an entry already exists."""
 
+
 class NewEntryForm(forms.Form):
     title = forms.CharField(max_length=20, label="Title")
-    # TODO: format this form somehow
     content = forms.CharField(
-        widget=forms.Textarea(attrs={"rows": 4, "cols": 10}),
+        widget=forms.Textarea(),
         label="Page content in Markdown",
     )
+
+
+class EditEntryForm(forms.Form):
+    content = forms.CharField(widget=forms.Textarea(), label="Edit Markdown content")
 
 
 def index(request):
@@ -60,3 +64,18 @@ def new(request):
                 util.save_entry(title=title, content=content)
                 return redirect("encyclopedia:entry", title=title)
     return render(request, "encyclopedia/new.html", {"form": NewEntryForm()})
+
+
+def edit(request, title):
+    """Allows user to edit existing entry."""
+    if request.method == "POST":
+        form = EditEntryForm(request.POST)
+        if form.is_valid():
+            new_content = form.cleaned_data["content"]
+            util.save_entry(title=title, content=new_content)
+            return redirect("encyclopedia:entry", title=title)
+    return render(
+        request,
+        "encyclopedia/edit.html",
+        {"title": title, "form": EditEntryForm({"content": util.get_entry(title)})},
+    )
