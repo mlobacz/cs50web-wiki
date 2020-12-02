@@ -1,8 +1,9 @@
-from django.shortcuts import render, reverse, redirect
-from django.http import HttpResponse, Http404, HttpResponseRedirect
-from django import forms
+from random import choice
 
 import markdown2
+from django import forms
+from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.shortcuts import redirect, render, reverse
 
 from . import util
 
@@ -79,3 +80,8 @@ def edit(request, title):
         "encyclopedia/edit.html",
         {"title": title, "form": EditEntryForm({"content": util.get_entry(title)})},
     )
+
+def random(request):
+    """Redirects user to randomly selected entry."""
+    return redirect("encyclopedia:entry", title=choice(util.list_entries()))
+    
