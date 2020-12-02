@@ -13,15 +13,12 @@ class AlreadyExistsError(Exception):
 
 
 class NewEntryForm(forms.Form):
-    title = forms.CharField(max_length=20, label="Title")
-    content = forms.CharField(
-        widget=forms.Textarea(),
-        label="Page content in Markdown",
-    )
+    title = forms.CharField(max_length=20)
+    content = forms.CharField(widget=forms.Textarea())
 
 
 class EditEntryForm(forms.Form):
-    content = forms.CharField(widget=forms.Textarea(), label="Edit Markdown content")
+    content = forms.CharField(widget=forms.Textarea())
 
 
 def index(request):
@@ -81,7 +78,7 @@ def edit(request, title):
         {"title": title, "form": EditEntryForm({"content": util.get_entry(title)})},
     )
 
+
 def random(request):
     """Redirects user to randomly selected entry."""
     return redirect("encyclopedia:entry", title=choice(util.list_entries()))
-    

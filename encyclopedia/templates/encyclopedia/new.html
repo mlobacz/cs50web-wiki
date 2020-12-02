@@ -1,5 +1,7 @@
 {% extends "encyclopedia/layout.html" %}
 
+{% load crispy_forms_tags %}
+
 {% block title %}
     New Page
 {% endblock %}
@@ -8,7 +10,7 @@
     <h1>New Page</h1>
     <form action="{% url 'encyclopedia:new' %}" method="POST">
         {% csrf_token %}
-        {{ form }}
+        {{ form|crispy }}
         <input type="submit" value="Add new entry">
     </form>
 {% endblock %}
