@@ -1,5 +1,11 @@
-# mlobacz
+# Wiki
 
-CS50W Project 1 submission.
+HarvardX's Computer Science for Web Programming project 1 submission.
 
-[Implementation demonstration video](https://youtu.be/ANBIkapFCRw).
+## Objective
+
+Design a Wikipedia-like online encyclopedia.
+
+## Demo video
+
+[Demonstration video](https://youtu.be/ANBIkapFCRw).
