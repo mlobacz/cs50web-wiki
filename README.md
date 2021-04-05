@@ -5,6 +5,7 @@ HarvardX's Computer Science for Web Programming project 1 submission.
 ## Objective
 
 Design a Wikipedia-like online encyclopedia.
+[Full task description](https://cs50.harvard.edu/web/2020/projects/1/wiki/).
 
 ## Demo video
 
