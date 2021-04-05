@@ -1,5 +1,12 @@
+"""
+Encyclopedia app configuration module.
+"""
+
 from django.apps import AppConfig
 
 
 class EncyclopediaConfig(AppConfig):
-    name = 'encyclopedia'
+    """
+    Encyclopedia configuration class.
+    """
+    name = "encyclopedia"

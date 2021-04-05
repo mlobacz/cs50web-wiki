@@ -1,3 +1,7 @@
+"""
+Utilities functions for encyclopedia app.
+"""
+
 import re
 
 from django.core.files.base import ContentFile
@@ -9,8 +13,13 @@ def list_entries():
     Returns a list of all names of encyclopedia entries.
     """
     _, filenames = default_storage.listdir("entries")
-    return list(sorted(re.sub(r"\.md$", "", filename)
-                for filename in filenames if filename.endswith(".md")))
+    return list(
+        sorted(
+            re.sub(r"\.md$", "", filename)
+            for filename in filenames
+            if filename.endswith(".md")
+        )
+    )
 
 
 def save_entry(title, content):
@@ -31,7 +40,7 @@ def get_entry(title):
     entry exists, the function returns None.
     """
     try:
-        f = default_storage.open(f"entries/{title}.md")
-        return f.read().decode("utf-8")
+        entry_file = default_storage.open(f"entries/{title}.md")
+        return entry_file.read().decode("utf-8")
     except FileNotFoundError:
         return None
