@@ -1,9 +1,13 @@
+"""
+Encyclopedia app views module.
+"""
+
 from random import choice
 
 import markdown2
 from django import forms
-from django.http import Http404, HttpResponse, HttpResponseRedirect
-from django.shortcuts import redirect, render, reverse
+from django.http import Http404
+from django.shortcuts import redirect, render
 
 from . import util
 
@@ -13,40 +17,51 @@ class AlreadyExistsError(Exception):
 
 
 class NewEntryForm(forms.Form):
+    """
+    Form for adding new entry to the encyclopedia.
+    """
     title = forms.CharField(max_length=20)
     content = forms.CharField(widget=forms.Textarea())
 
 
 class EditEntryForm(forms.Form):
+    """
+    For for editing new entry in the encyclopedia.
+    """
     content = forms.CharField(widget=forms.Textarea())
 
 
 def index(request):
+    """
+    Renders encyclopedia index page.
+    """
     return render(request, "encyclopedia/index.html", {"entries": util.list_entries()})
 
 
 def entry(request, title):
     """Renders requested wiki entry. Returns 404 if not found."""
-    entry = util.get_entry(title)
-    if not entry:
+    entry_content = util.get_entry(title)
+    if not entry_content:
         raise Http404(f"{title} entry was not found in the Wiki.")
     return render(
         request,
         "encyclopedia/entry.html",
-        {"title": title, "entry": markdown2.markdown(entry)},
+        {"title": title, "entry": markdown2.markdown(entry_content)},
     )
 
 
 def search(request):
-    """Redirects to page matching search query or returns list of entries containing query string."""
+    """
+    Redirects to page matching search query
+    or returns list of entries containing query string.
+    """
     query = request.GET["q"]
     if util.get_entry(query):
         return redirect("encyclopedia:entry", title=query)
-    else:
-        matching_entries = [entry for entry in util.list_entries() if query in entry]
-        return render(
-            request, "encyclopedia/search.html", {"entries": matching_entries}
-        )
+    matching_entries = [entry for entry in util.list_entries() if query in entry]
+    return render(
+        request, "encyclopedia/search.html", {"entries": matching_entries}
+    )
 
 
 def new(request):
@@ -57,10 +72,9 @@ def new(request):
             title = form.cleaned_data["title"]
             if title in util.list_entries():
                 raise AlreadyExistsError(f"{title} entry already exists!")
-            else:
-                content = form.cleaned_data["content"]
-                util.save_entry(title=title, content=content)
-                return redirect("encyclopedia:entry", title=title)
+            content = form.cleaned_data["content"]
+            util.save_entry(title=title, content=content)
+            return redirect("encyclopedia:entry", title=title)
     return render(request, "encyclopedia/new.html", {"form": NewEntryForm()})
 
 

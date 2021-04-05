@@ -1,3 +1,7 @@
+"""
+Utilities functions for encyclopedia app.
+"""
+
 import re
 
 from django.core.files.base import ContentFile
@@ -36,7 +40,7 @@ def get_entry(title):
     entry exists, the function returns None.
     """
     try:
-        f = default_storage.open(f"entries/{title}.md")
-        return f.read().decode("utf-8")
+        entry_file = default_storage.open(f"entries/{title}.md")
+        return entry_file.read().decode("utf-8")
     except FileNotFoundError:
         return None

@@ -1,3 +1,7 @@
+"""
+Module with url routing for encyclopedia app.
+"""
+
 from django.urls import path
 
 from . import views
