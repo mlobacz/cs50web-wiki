@@ -20,6 +20,7 @@ class NewEntryForm(forms.Form):
     """
     Form for adding new entry to the encyclopedia.
     """
+
     title = forms.CharField(max_length=20)
     content = forms.CharField(widget=forms.Textarea())
 
@@ -28,6 +29,7 @@ class EditEntryForm(forms.Form):
     """
     For for editing new entry in the encyclopedia.
     """
+
     content = forms.CharField(widget=forms.Textarea())
 
 
@@ -59,9 +61,7 @@ def search(request):
     if util.get_entry(query):
         return redirect("encyclopedia:entry", title=query)
     matching_entries = [entry for entry in util.list_entries() if query in entry]
-    return render(
-        request, "encyclopedia/search.html", {"entries": matching_entries}
-    )
+    return render(request, "encyclopedia/search.html", {"entries": matching_entries})
 
 
 def new(request):

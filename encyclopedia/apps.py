@@ -9,4 +9,5 @@ class EncyclopediaConfig(AppConfig):
     """
     Encyclopedia configuration class.
     """
+
     name = "encyclopedia"
